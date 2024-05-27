@@ -1,0 +1,24 @@
+set(BASE_FLAGS
+        $<$<CONFIG:Debug>:-Wall -Wextra -Wno-unused-parameter -fno-common -g -ggdb -Wno-unknown-pragmas -fsycl -fsycl-link -fsycl-targets=nvptx64-nvidia-cuda># -fsycl-device-code-split=per_kernel > #$<TARGET_PROPERTY:MKL::MKL,INTERFACE_COMPILE_OPTIONS>
+        $<$<CONFIG:Release>:-Wall -Wextra -Wno-unused-parameter -fno-common -O3 -funroll-loops -Wno-unknown-pragmas -fsycl -fsycl-link -fsycl-targets=nvptx64-nvidia-cuda> # -fsycl-device-code-split=per_kernel > #$<TARGET_PROPERTY:MKL::MKL,INTERFACE_COMPILE_OPTIONS>
+)
+set(BASE_LINKER_FLAGS
+        $<$<CONFIG:Debug>:-fsycl -fsycl-targets=nvptx64-nvidia-cuda> # -fsycl-device-code-split=per_kernel>
+        $<$<CONFIG:Release>:-fsycl -fsycl-targets=nvptx64-nvidia-cuda> # -fsycl-device-code-split=per_kernel>
+)
+
+find_package(MKL CONFIG REQUIRED)
+
+
+add_executable(e00
+        main.cpp
+)
+target_compile_options(e00 PRIVATE ${BASE_FLAGS})
+target_link_options(e00 PRIVATE ${BASE_LINKER_FLAGS})
+target_link_libraries(
+        e00
+        PRIVATE
+        sycl
+        MKL::MKL_SYCL::BLAS
+)
+
