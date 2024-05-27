@@ -3,7 +3,7 @@
 //
 
 // Standard SYCL header
-#include <CL/sycl.hpp>
+#include <sycl/sycl.hpp>
 // STL classes
 #include <exception>
 #include <iostream>
