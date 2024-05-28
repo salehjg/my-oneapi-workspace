@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     // Create GPU device
     sycl::device my_device;
     try {
-        my_device = sycl::device(sycl::gpu_selector());
+        my_device = sycl::device(sycl::gpu_selector_v);
     }
     catch (...) {
         std::cout << "Warning: GPU device not found! Using default device instead." << std::endl;
@@ -60,9 +60,8 @@ int main(int argc, char *argv[]) {
     sycl::buffer<double, 1> C_buffer(C.data(), C.size());
     // add oneapi::mkl::blas::gemm to execution queue and catch any synchronous exceptions
     try {
-        using oneapi::mkl::blas::gemm;
         using oneapi::mkl::transpose;
-        gemm(my_queue, transpose::nontrans, transpose::nontrans, m, n, k, alpha, A_buffer, ldA, B_buffer,
+        oneapi::mkl::blas::column_major::gemm(my_queue, transpose::nontrans, transpose::nontrans, m, n, k, alpha, A_buffer, ldA, B_buffer,
              ldB, beta, C_buffer, ldC);
     }
     catch (sycl::exception const& e) {
