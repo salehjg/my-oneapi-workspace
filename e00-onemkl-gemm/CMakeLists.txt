@@ -9,8 +9,7 @@ set(BASE_LINKER_FLAGS
         $<$<CONFIG:Release>:-fsycl  -Xsycl-target-backend --cuda-gpu-arch=sm_89> # -fsycl-device-code-split=per_kernel>
 )
 
-find_package(MKL REQUIRED)
-
+find_package(oneMKL REQUIRED)
 
 add_executable(e00
         main.cpp
@@ -20,6 +19,7 @@ target_link_options(e00 PRIVATE ${BASE_LINKER_FLAGS})
 target_link_libraries(
         e00
         PRIVATE
-        MKL::MKL_SYCL::BLAS
+        MKL::onemkl
 )
+set_target_properties(e00 PROPERTIES NO_SYSTEM_FROM_IMPORTED true)
 
